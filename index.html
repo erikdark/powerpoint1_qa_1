@@ -158,6 +158,8 @@ pre {
 
     #senior {
     position: relative;
+    min-height: 400px; /* Гарантирует видимость секции */
+    visibility: visible; /* Фоллбэк для видимости */
   }
 
   #senior::before {
@@ -182,6 +184,7 @@ pre {
     border-radius: 12px;
     margin-top: 20px;
     border-left: 4px solid #00e0ff;
+    visibility: visible; /* Гарантирует видимость */
   }
 
   .test-case-category h4 {
@@ -196,6 +199,8 @@ pre {
     margin-bottom: 15px;
     border-left: 3px solid #00ffae;
     transition: transform 0.2s ease, box-shadow 0.2s ease;
+    visibility: visible; /* Гарантирует видимость */
+    position: relative; /* Для корректного рендеринга */
   }
 
   .test-case-card:hover {
@@ -252,6 +257,8 @@ pre {
     border-radius: 6px;
     cursor: pointer;
     transition: background 0.3s;
+    visibility: visible; /* Гарантирует видимость */
+    z-index: 1; /* Выше псевдоэлементов */
   }
 
   .send-btn:hover {
@@ -260,8 +267,17 @@ pre {
 
   .with-character.senior::after {
     background-image: url('https://cdn-icons-png.flaticon.com/512/4140/4140047.png');
+    z-index: -1; /* Не перекрывает контент */
   }
 
+  /* Фоллбэк для видимости, если JS не сработал */
+  @media (prefers-reduced-motion: reduce) {
+    .section, .test-case-card, .test-case-category, .send-btn {
+      opacity: 1 !important;
+      transform: translateY(0) !important;
+      visibility: visible !important;
+    }
+  }
 
   </style>
 </head>
@@ -669,6 +685,7 @@ value > 201        — Высокий
    <button class="btn" onclick="scrollToSection('senior')">Далее →</button>
 </div>
   
+  
 
 
 
@@ -691,14 +708,61 @@ value > 201        — Высокий
       document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
     }
 
+
+
     function showResult(testId) {
-    const card = document.querySelector(`.test-case-card[data-test-id="${testId}"]`);
-    const result = card.querySelector('.result');
-    result.style.display = 'block';
-    setTimeout(() => {
-      result.classList.add('visible');
-    }, 10); 
+    try {
+      const card = document.querySelector(`.test-case-card[data-test-id="${testId}"]`);
+      if (!card) {
+        console.error(`Test case card with ID ${testId} not found`);
+        return;
+      }
+      const result = card.querySelector('.result');
+      if (!result) {
+        console.error(`Result element not found for test case ${testId}`);
+        return;
+      }
+      result.style.display = 'block';
+      setTimeout(() => {
+        result.classList.add('visible');
+      }, 10);
+    } catch (error) {
+      console.error('Error in showResult:', error);
+    }
   }
+
+  // Убедимся, что IntersectionObserver работает для всех секций
+  document.addEventListener('DOMContentLoaded', () => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+            // Отладочный лог для проверки
+            console.log(`Section ${entry.target.id} is visible`);
+          }
+        });
+      },
+      {
+        threshold: 0.1, // Снижен для надежности
+        rootMargin: '50px' // Срабатывает раньше
+      }
+    );
+
+    document.querySelectorAll('.section').forEach((section) => {
+      observer.observe(section);
+    });
+
+    // Фоллбэк: сделать секции видимыми через 2 секунды, если Observer не сработал
+    setTimeout(() => {
+      document.querySelectorAll('.section:not(.visible)').forEach((section) => {
+        section.classList.add('visible');
+        console.warn(`Forced visibility for section ${section.id}`);
+      });
+    }, 2000);
+  });
+  
+   
   </script>
 
 </body>
