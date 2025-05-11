@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Собеседование QA — разбор кейса</title>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'JetBrains Mono', monospace;
+      color: #f0f0f0;
+      background: linear-gradient(120deg, #0f2027, #203a43, #2c5364);
+      background-size: cover;
+      background-attachment: fixed;
+    }
+
+    .section {
+      padding: 80px 20px;
+      max-width: 1000px;
+      margin: 0 auto;
+      opacity: 0;
+      transform: translateY(40px);
+      transition: opacity 1s ease-out, transform 1s ease-out;
+    }
+
+    .section.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    h1, h2 {
+      color: #00e0ff;
+      margin-bottom: 20px;
+    }
+
+    pre {
+      background-color: rgba(0,0,0,0.5);
+      padding: 16px;
+      border-radius: 10px;
+      white-space: pre-wrap;
+      color: #00ffae;
+    }
+
+    .btn {
+      margin-top: 40px;
+      padding: 10px 20px;
+      font-size: 16px;
+      background-color: #00e0ff;
+      color: #000;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    .btn:hover {
+      background-color: #00bcd4;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="section" id="intro">
+    <h1>Собеседование QA: полный разбор кейса</h1>
+    <p>
+      Привет, друзья! Сегодня мы разберем задание с собеседования на позицию QA Middle+ с трех сторон: интервьюеров, кандидата и Senior QA.
+      Мы покажем, чего ждут тимлид и руководитель, как кандидат должен подойти к заданию, и как Senior QA решает его на 200%.
+      Плюс обсудим, почему такие задания спорные, и дадим советы, как их пройти. Погнали!
+    </p>
+    <button class="btn" onclick="scrollToSection('task')">Далее →</button>
+  </div>
+
+  <div class="section" id="task">
+    <h2>Постановка задачи</h2>
+    <pre>
+POST /rating
+{
+  "companyId": UUID,
+  "value": int
+}
+
+value < 100        — Низкий
+101 ≤ value ≤ 200  — Средний
+value > 201        — Высокий
+    </pre>
+    <p>
+      Вот задание: эндпоинт <code>POST /rating</code> принимает <code>companyId</code> в формате UUID и <code>value</code> — целое число.
+      Рейтинг классифицируется как Низкий, Средний или Высокий в зависимости от <code>value</code>.
+
+      Нужно составить тест-план и примеры проверок.
+
+      Проблема? Это вся информация! Нет деталей о формате ответа, ошибках, авторизации или бизнес-логике.
+      Почему задание такое сырое? Начнем с того, чего хотят интервьюеры.
+    </p>
+  </div>
+
+  <script>
+    // Анимация появления секций при скролле
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, {
+      threshold: 0.2
+    });
+
+    document.querySelectorAll('.section').forEach(section => {
+      observer.observe(section);
+    });
+
+    function scrollToSection(id) {
+      document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+    }
+  </script>
+
+</body>
+</html>
