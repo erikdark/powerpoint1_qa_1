@@ -173,10 +173,10 @@ pre {
     opacity: 0.1;
     animation: floaty 8s ease-in-out infinite;
     pointer-events: none;
-    z-index: -1; /* Не перекрывает контент */
+    z-index: -1;
   }
 
-  .test-case-table {
+  .test-case-category {
     background-color: rgba(0, 0, 0, 0.4);
     padding: 20px;
     border-radius: 12px;
@@ -184,19 +184,83 @@ pre {
     border-left: 4px solid #00e0ff;
   }
 
-  .test-case-table h4 {
+  .test-case-category h4 {
     margin-top: 0;
     color: #00e0ff;
   }
 
-  .test-case-table ul {
-    margin-bottom: 0;
+  .test-case-card {
+    background-color: rgba(255, 255, 255, 0.05);
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    border-left: 3px solid #00ffae;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .test-case-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 224, 255, 0.2);
+  }
+
+  .test-case-card h5 {
+    color: #00e0ff;
+    margin: 0 0 10px;
+  }
+
+  .test-case-card p {
+    margin: 0 0 10px;
+    color: #f0f0f0;
+  }
+
+  .test-case-card pre.request-body {
+    background-color: rgba(0, 0, 0, 0.5);
+    color: #00ffae;
+    padding: 10px;
+    border-radius: 6px;
+    margin: 10px 0;
+    font-size: 13px;
+  }
+
+  .test-case-card pre.result {
+    background-color: rgba(0, 0, 0, 0.5);
+    color: #00ffae;
+    padding: 10px;
+    border-radius: 6px;
+    margin: 10px 0;
+    font-size: 13px;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+  }
+
+  .test-case-card pre.result.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .test-case-card pre.result.error {
+    color: #ff5555;
+  }
+
+  .send-btn {
+    padding: 8px 16px;
+    font-size: 14px;
+    background-color: #00e0ff;
+    color: #000;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.3s;
+  }
+
+  .send-btn:hover {
+    background-color: #00bcd4;
   }
 
   .with-character.senior::after {
     background-image: url('https://cdn-icons-png.flaticon.com/512/4140/4140047.png');
   }
-
 
 
   </style>
@@ -453,54 +517,156 @@ value > 201        — Высокий
     </ul>
 
     <div class="step"><strong>Шаг 6:</strong> Тест-кейсы</div>
-    <div class="test-case-table">
+    <div class="test-case-category">
       <h4>Функциональные тест-кейсы</h4>
-      <ul>
-        <li><strong>TC1: Низкий рейтинг</strong><br>Запрос: {"companyId": "123e4567-e89b-12d3-a456-426614174000", "value": 50}<br>Ожидается: 200, {"rating": "Low"}<br>Важно: Основной сценарий для UI/аналитики.</li>
-        <li><strong>TC2: Средний рейтинг</strong><br>Запрос: {"companyId": "123e4567-e89b-12d3-a456-426614174000", "value": 150}<br>Ожидается: 200, {"rating": "Medium"}<br>Важно: Подтверждает средний диапазон.</li>
-        <li><strong>TC3: Высокий рейтинг</strong><br>Запрос: {"companyId": "123e4567-e89b-12d3-a456-426614174000", "value": 250}<br>Ожидается: 200, {"rating": "High"}<br>Важно: Для высоких рейтингов, влияющих на репутацию.</li>
-      </ul>
+      <div class="test-case-card" data-test-id="tc1">
+        <h5>TC1: Низкий рейтинг</h5>
+        <p><strong>Пояснение:</strong> Проверить, что эндпоинт корректно классифицирует рейтинг как "Низкий". Важно для основного сценария отображения в UI или аналитике.</p>
+        <pre class="request-body">{"companyId": "123e4567-e89b-12d3-a456-426614174000", "value": 50}</pre>
+        <button class="send-btn" onclick="showResult('tc1')">Отправить</button>
+        <pre class="result" style="display: none;">200 OK, {"rating": "Low"}</pre>
+      </div>
+      <div class="test-case-card" data-test-id="tc2">
+        <h5>TC2: Средний рейтинг</h5>
+        <p><strong>Пояснение:</strong> Проверить классификацию "Средний". Подтверждает работу логики для среднего диапазона.</p>
+        <pre class="request-body">{"companyId": "123e4567-e89b-12d3-a456-426614174000", "value": 150}</pre>
+        <button class="send-btn" onclick="showResult('tc2')">Отправить</button>
+        <pre class="result" style="display: none;">200 OK, {"rating": "Medium"}</pre>
+      </div>
+      <div class="test-case-card" data-test-id="tc3">
+        <h5>TC3: Высокий рейтинг</h5>
+        <p><strong>Пояснение:</strong> Проверить классификацию "Высокий". Гарантирует корректность для высоких рейтингов, влияющих на репутацию.</p>
+        <pre class="request-body">{"companyId": "123e4567-e89b-12d3-a456-426614174000", "value": 250}</pre>
+        <button class="send-btn" onclick="showResult('tc3')">Отправить</button>
+        <pre class="result" style="display: none;">200 OK, {"rating": "High"}</pre>
+      </div>
     </div>
-    <div class="test-case-table">
+    <div class="test-case-category">
       <h4>Граничные тест-кейсы</h4>
-      <ul>
-        <li><strong>TC4: Граница низкого</strong><br>Запрос: {"companyId": "123e4567-e89b-12d3-a456-426614174000", "value": 100}<br>Ожидается: 200, {"rating": "Low"}<br>Важно: Границы часто вызывают баги.</li>
-        <li><strong>TC5: Нижняя граница среднего</strong><br>Запрос: {"companyId": "123e4567-e89b-12d3-a456-426614174000", "value": 101}<br>Ожидается: 200, {"rating": "Medium"}<br>Важно: Проверяет переход.</li>
-        <li><strong>TC6: Верхняя граница среднего</strong><br>Запрос: {"companyId": "123e4567-e89b-12d3-a456-426614174000", "value": 200}<br>Ожидается: 200, {"rating": "Medium"}<br>Важно: Проверяет верхнюю границу.</li>
-        <li><strong>TC7: Граница высокого</strong><br>Запрос: {"companyId": "123e4567-e89b-12d3-a456-426614174000", "value": 201}<br>Ожидается: 200, {"rating": "High"}<br>Важно: Точность на границе.</li>
-      </ul>
+      <div class="test-case-card" data-test-id="tc4">
+        <h5>TC4: Граница низкого</h5>
+        <p><strong>Пояснение:</strong> Проверить поведение на верхней границе низкого рейтинга. Граничные значения часто вызывают баги.</p>
+        <pre class="request-body">{"companyId": "123e4567-e89b-12d3-a456-426614174000", "value": 100}</pre>
+        <button class="send-btn" onclick="showResult('tc4')">Отправить</button>
+        <pre class="result" style="display: none;">200 OK, {"rating": "Low"}</pre>
+      </div>
+      <div class="test-case-card" data-test-id="tc5">
+        <h5>TC5: Нижняя граница среднего</h5>
+        <p><strong>Пояснение:</strong> Проверить переход от низкого к среднему рейтингу. Подтверждает корректность логики на границе.</p>
+        <pre class="request-body">{"companyId": "123e4567-e89b-12d3-a456-426614174000", "value": 101}</pre>
+        <button class="send-btn" onclick="showResult('tc5')">Отправить</button>
+        <pre class="result" style="display: none;">200 OK, {"rating": "Medium"}</pre>
+      </div>
+      <div class="test-case-card" data-test-id="tc6">
+        <h5>TC6: Верхняя граница среднего</h5>
+        <p><strong>Пояснение:</strong> Проверить верхнюю границу среднего диапазона. Ошибка здесь может некорректно классифицировать рейтинг.</p>
+        <pre class="request-body">{"companyId": "123e4567-e89b-12d3-a456-426614174000", "value": 200}</pre>
+        <button class="send-btn" onclick="showResult('tc6')">Отправить</button>
+        <pre class="result" style="display: none;">200 OK, {"rating": "Medium"}</pre>
+      </div>
+      <div class="test-case-card" data-test-id="tc7">
+        <h5>TC7: Граница высокого</h5>
+        <p><strong>Пояснение:</strong> Проверить переход к высокому рейтингу. Гарантирует точность на границе.</p>
+        <pre class="request-body">{"companyId": "123e4567-e89b-12d3-a456-426614174000", "value": 201}</pre>
+        <button class="send-btn" onclick="showResult('tc7')">Отправить</button>
+        <pre class="result" style="display: none;">200 OK, {"rating": "High"}</pre>
+      </div>
     </div>
-    <div class="test-case-table">
+    <div class="test-case-category">
       <h4>Негативные тест-кейсы</h4>
-      <ul>
-        <li><strong>TC8: Отрицательное значение</strong><br>Запрос: {"companyId": "123e4567-e89b-12d3-a456-426614174000", "value": -1}<br>Ожидается: 400, {"error": "Value must be positive"}<br>Важно: Защита от некорректных данных.</li>
-        <li><strong>TC9: Нечисловое значение</strong><br>Запрос: {"companyId": "123e4567-e89b-12d3-a456-426614174000", "value": "string"}<br>Ожидается: 400, {"error": "Value must be an integer"}<br>Важно: Защита от ошибок клиента.</li>
-        <li><strong>TC10: Пустое значение</strong><br>Запрос: {"companyId": "123e4567-e89b-12d3-a456-426614174000", "value": null}<br>Ожидается: 400, {"error": "Value is required"}<br>Важно: Предотвращает сбои.</li>
-        <li><strong>TC11: Невалидный UUID</strong><br>Запрос: {"companyId": "not-a-uuid", "value": 50}<br>Ожидается: 400, {"error": "Invalid UUID format"}<br>Важно: Защита от некорректных ID.</li>
-        <li><strong>TC12: Несуществующий companyId</strong><br>Запрос: {"companyId": "00000000-0000-0000-0000-000000000000", "value": 50}<br>Ожидается: 404, {"error": "Company not found"}<br>Важно: Предотвращает искажение данных.</li>
-        <li><strong>TC13: Пустой запрос</strong><br>Запрос: {}<br>Ожидается: 400, {"error": "Missing required fields"}<br>Важно: Защита от некорректных запросов.</li>
-      </ul>
+      <div class="test-case-card" data-test-id="tc8">
+        <h5>TC8: Отрицательное значение</h5>
+        <p><strong>Пояснение:</strong> Проверить валидацию отрицательных чисел. Отрицательные рейтинги не имеют смысла.</p>
+        <pre class="request-body">{"companyId": "123e4567-e89b-12d3-a456-426614174000", "value": -1}</pre>
+        <button class="send-btn" onclick="showResult('tc8')">Отправить</button>
+        <pre class="result error" style="display: none;">400 Bad Request, {"error": "Value must be positive"}</pre>
+      </div>
+      <div class="test-case-card" data-test-id="tc9">
+        <h5>TC9: Нечисловое значение</h5>
+        <p><strong>Пояснение:</strong> Проверить обработку некорректного типа данных. Защита от ошибок клиента.</p>
+        <pre class="request-body">{"companyId": "123e4567-e89b-12d3-a456-426614174000", "value": "string"}</pre>
+        <button class="send-btn" onclick="showResult('tc9')">Отправить</button>
+        <pre class="result error" style="display: none;">400 Bad Request, {"error": "Value must be an integer"}</pre>
+      </div>
+      <div class="test-case-card" data-test-id="tc10">
+        <h5>TC10: Пустое значение</h5>
+        <p><strong>Пояснение:</strong> Проверить обработку отсутствующего значения. Null может вызвать сбой.</p>
+        <pre class="request-body">{"companyId": "123e4567-e89b-12d3-a456-426614174000", "value": null}</pre>
+        <button class="send-btn" onclick="showResult('tc10')">Отправить</button>
+        <pre class="result error" style="display: none;">400 Bad Request, {"error": "Value is required"}</pre>
+      </div>
+      <div class="test-case-card" data-test-id="tc11">
+        <h5>TC11: Невалидный UUID</h5>
+        <p><strong>Пояснение:</strong> Проверить валидацию формата companyId. Защита от некорректных идентификаторов.</p>
+        <pre class="request-body">{"companyId": "not-a-uuid", "value": 50}</pre>
+        <button class="send-btn" onclick="showResult('tc11')">Отправить</button>
+        <pre class="result error" style="display: none;">400 Bad Request, {"error": "Invalid UUID format"}</pre>
+      </div>
+      <div class="test-case-card" data-test-id="tc12">
+        <h5>TC12: Несуществующий companyId</h5>
+        <p><strong>Пояснение:</strong> Проверить обработку несуществующего companyId. Предотвращает искажение данных.</p>
+        <pre class="request-body">{"companyId": "00000000-0000-0000-0000-000000000000", "value": 50}</pre>
+        <button class="send-btn" onclick="showResult('tc12')">Отправить</button>
+        <pre class="result error" style="display: none;">404 Not Found, {"error": "Company not found"}</pre>
+      </div>
+      <div class="test-case-card" data-test-id="tc13">
+        <h5>TC13: Пустой запрос</h5>
+        <p><strong>Пояснение:</strong> Проверить обработку отсутствия обязательных полей. Защита от некорректных запросов.</p>
+        <pre class="request-body">{}</pre>
+        <button class="send-btn" onclick="showResult('tc13')">Отправить</button>
+        <pre class="result error" style="display: none;">400 Bad Request, {"error": "Missing required fields"}</pre>
+      </div>
     </div>
-    <div class="test-case-table">
+    <div class="test-case-category">
       <h4>Тест-кейсы авторизации</h4>
-      <ul>
-        <li><strong>TC14: Без токена</strong><br>Запрос: {"companyId": "123e4567-e89b-12d3-a456-426614174000", "value": 50} (без Authorization)<br>Ожидается: 401, {"error": "Token required"}<br>Важно: Защита от неавторизованных запросов.</li>
-        <li><strong>TC15: Невалидный токен</strong><br>Запрос: (с поддельным JWT)<br>Ожидается: 403, {"error": "Invalid token"}<br>Важно: Защита от подделки.</li>
-        <li><strong>TC16: Токен без прав</strong><br>Запрос: (с JWT без scope rating:write)<br>Ожидается: 403, {"error": "Insufficient permissions"}<br>Важно: Только уполномоченные пользователи.</li>
-      </ul>
+      <div class="test-case-card" data-test-id="tc14">
+        <h5>TC14: Без токена</h5>
+        <p><strong>Пояснение:</strong> Проверить защиту эндпоинта от неавторизованных запросов. Предотвращает несанкционированное изменение.</p>
+        <pre class="request-body">{"companyId": "123e4567-e89b-12d3-a456-426614174000", "value": 50} (без Authorization)</pre>
+        <button class="send-btn" onclick="showResult('tc14')">Отправить</button>
+        <pre class="result error" style="display: none;">401 Unauthorized, {"error": "Token required"}</pre>
+      </div>
+      <div class="test-case-card" data-test-id="tc15">
+        <h5>TC15: Невалидный токен</h5>
+        <p><strong>Пояснение:</strong> Проверить валидацию токена. Защита от подделки токенов.</p>
+        <pre class="request-body">{"companyId": "123e4567-e89b-12d3-a456-426614174000", "value": 50} (с поддельным JWT)</pre>
+        <button class="send-btn" onclick="showResult('tc15')">Отправить</button>
+        <pre class="result error" style="display: none;">403 Forbidden, {"error": "Invalid token"}</pre>
+      </div>
+      <div class="test-case-card" data-test-id="tc16">
+        <h5>TC16: Токен без прав</h5>
+        <p><strong>Пояснение:</strong> Проверить проверку прав доступа. Только уполномоченные пользователи могут менять рейтинги.</p>
+        <pre class="request-body">{"companyId": "123e4567-e89b-12d3-a456-426614174000", "value": 50} (с JWT без scope rating:write)</pre>
+        <button class="send-btn" onclick="showResult('tc16')">Отправить</button>
+        <pre class="result error" style="display: none;">403 Forbidden, {"error": "Insufficient permissions"}</pre>
+      </div>
     </div>
-    <div class="test-case-table">
+    <div class="test-case-category">
       <h4>Тест-кейсы дублирующихся запросов</h4>
-      <ul>
-        <li><strong>TC17: Повтор с новым value</strong><br>Запрос: Первый: {"value": 50}; Второй: {"value": 150}<br>Ожидается: Первый: 200, {"rating": "Low"}; Второй: 200, {"rating": "Medium"}<br>Важно: Подтверждает обновление рейтинга.</li>
-        <li><strong>TC18: Повтор с тем же value</strong><br>Запрос: Первый: {"value": 50}; Второй: {"value": 50}<br>Ожидается: Первый: 200, {"rating": "Low"}; Второй: 200, {"rating": "Low"}<br>Важно: Исключает ненужные обновления.</li>
-      </ul>
+      <div class="test-case-card" data-test-id="tc17">
+        <h5>TC17: Повтор с новым value</h5>
+        <p><strong>Пояснение:</strong> Проверить обновление рейтинга при повторе. Подтверждает возможность динамических оценок.</p>
+        <pre class="request-body">Первый: {"companyId": "123e4567-e89b-12d3-a456-426614174000", "value": 50}
+Второй: {"companyId": "123e4567-e89b-12d3-a456-426614174000", "value": 150}</pre>
+        <button class="send-btn" onclick="showResult('tc17')">Отправить</button>
+        <pre class="result" style="display: none;">Первый: 200 OK, {"rating": "Low"}
+Второй: 200 OK, {"rating": "Medium"}</pre>
+      </div>
+      <div class="test-case-card" data-test-id="tc18">
+        <h5>TC18: Повтор с тем же value</h5>
+        <p><strong>Пояснение:</strong> Проверить обработку идентичного повтора. Исключает ненужные обновления.</p>
+        <pre class="request-body">Первый: {"companyId": "123e4567-e89b-12d3-a456-426614174000", "value": 50}
+Второй: {"companyId": "123e4567-e89b-12d3-a456-426614174000", "value": 50}</pre>
+        <button class="send-btn" onclick="showResult('tc18')">Отправить</button>
+        <pre class="result" style="display: none;">Первый: 200 OK, {"rating": "Low"}
+Второй: 200 OK, {"rating": "Low"}</pre>
+      </div>
     </div>
     <p>
-      <em>Визуал:</em> Представьте таблицу тест-кейсов с категориями (функциональные, граничные, негативные, авторизация, дубликаты) и анимацию с галочками для успешных проверок, где Senior QA обсуждает задачу за круглым столом, а затем пишет тест-план на доске.
+      <em>Визуал:</em> Интерактивные карточки с тест-кейсами, где пользователь может отправить запрос и увидеть результат. Представьте анимацию с галочками для успешных проверок, где Senior QA обсуждает задачу за круглым столом, а затем пишет тест-план на доске.
     </p>
 
-  <button class="btn" onclick="scrollToSection('senior')">Далее →</button>
+   <button class="btn" onclick="scrollToSection('senior')">Далее →</button>
 </div>
   
 
@@ -524,6 +690,15 @@ value > 201        — Высокий
     function scrollToSection(id) {
       document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
     }
+
+    function showResult(testId) {
+    const card = document.querySelector(`.test-case-card[data-test-id="${testId}"]`);
+    const result = card.querySelector('.result');
+    result.style.display = 'block';
+    setTimeout(() => {
+      result.classList.add('visible');
+    }, 10); 
+  }
   </script>
 
 </body>
